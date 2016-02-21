@@ -47,6 +47,9 @@ def showList():
     depts = db().select(db.forSaleList.ALL, orderby=db.forSaleList.Date)
     return locals()
 
+def imageTables(): 
+   return dict(tables=db().select(db.imageList.ALL))
+
 @auth.requires_login()
 def addItem():
     crud.messages.submit_button = 'Place on market'
@@ -61,6 +64,16 @@ def add():
     """Add a post."""
     SQLFORM.messages.submit_button = 'Place on market'
     form = SQLFORM(db.forSaleList)
+    if form.process().accepted:
+        # Successful processing.
+        session.flash = T("inserted")
+        redirect(URL('default', 'index'))
+    return locals()
+
+@auth.requires_login()
+def addImage():
+    """Add a post."""
+    form = SQLFORM(db.imageList)
     if form.process().accepted:
         # Successful processing.
         session.flash = T("inserted")
