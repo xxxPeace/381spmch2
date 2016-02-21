@@ -68,7 +68,8 @@ def _():
               (T('About'), False, URL(
                'admin', 'default', 'about/' + app)),
               ]),
-        (T('Manager Items'),False, URL('manageItems'))
+        (T('Manager Items'),False, URL('manageItems')),
+        (T('add image'),False, URL('addImage'))
         ]
 if DEVELOPMENT_MENU: _()
 

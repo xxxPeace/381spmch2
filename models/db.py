@@ -96,18 +96,22 @@ auth.settings.reset_password_requires_verification = True
 db = DAL("sqlite://storage.sqlite")
 
 
+db.define_table('imageList',
+  Field('Image', 'upload'))
+
 db.define_table('forSaleList',
-               Field('Seller',  requires=IS_NOT_EMPTY()),
-               Field('Email', requires = IS_EMAIL(error_message='invalid email!')),
-               Field('Phone', requires = IS_MATCH('^1?((-)\d{3}-?|\(\d{3}\))\d{3}-?\d{4}$',
-                      error_message='not a phone number')),
-               Field('Date','datetime'),
-               Field('Title', requires=IS_NOT_EMPTY()),
-               Field('Description','text'),
-               Field('Category', 'string', requires = IS_IN_SET
-                     (['Car', 'Bike', 'Book', 'Music', 'Outdoors', 'Household', 'Misc'])),
-               Field('Priec', 'double', requires = IS_FLOAT_IN_RANGE(0, 100000.0,
-                      error_message='The price should be in the range 0..100000')),
-               Field('Status','boolean', default=False),
-               Field('Image', 'upload'),
-               format = '%(title)s')
+  Field('Seller',  requires=IS_NOT_EMPTY()),
+  Field('Email', requires = IS_EMAIL(error_message='invalid email!')),
+  Field('Phone', requires = IS_MATCH('^1?((-)\d{3}-?|\(\d{3}\))\d{3}-?\d{4}$',
+        error_message='not a phone number')),
+  Field('Date','datetime'),
+  Field('Title', requires=IS_NOT_EMPTY()),
+  Field('Description','text'),
+  Field('Category', 'string', requires = IS_IN_SET
+       (['Car', 'Bike', 'Book', 'Music', 'Outdoors', 'Household', 'Misc'])),
+  Field('Priec', 'double', requires = IS_FLOAT_IN_RANGE(0, 100000.0,
+        error_message='The price should be in the range 0..100000')),
+  Field('Status','boolean', default=False),
+  Field('Image', 'upload'),
+  Field('image_id', 'reference imageList', readable=False, writable=False),
+  format = '%(title)s')

@@ -3330,3 +3330,47 @@ success!
 success!
 success!
 success!
+timestamp: 2016-02-22T03:23:42.333000
+CREATE TABLE imageList(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    Image CHAR(512)
+);
+success!
+timestamp: 2016-02-22T03:23:42.447000
+ALTER TABLE forSaleList ADD image_id INTEGER REFERENCES imageList (id) ON DELETE CASCADE  ;
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
+success!
