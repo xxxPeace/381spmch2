@@ -112,6 +112,7 @@ db.define_table('forSaleList',
   Field('Price', 'double', requires = IS_FLOAT_IN_RANGE(0, 100000.0,
         error_message='The price should be in the range 0..100000')),
   Field('Status','boolean', default=False),
+  Field('votes', 'integer', default=0),
   Field('Image', 'upload'),
   #Field('Image_id', 'reference imageList', readable=False, writable=False),
   )
