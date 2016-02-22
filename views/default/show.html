@@ -1,17 +1,17 @@
 {{extend 'layout.html'}}
 <h1>Product image:</h1>
 <div class ="one" style="text-align:center" id="one"></div>
+<div class ="well">
 {{for images in itemImages:}}
   <img width="60px" height="60px" class="img-thumbnail" src="{{=URL('download', args=images.image)}}" />
 
 {{pass}}
-
-
+</div>
 
 <div class ="well">
     <h2>{{=image.Title}}</h2>
     <h2 style="color:red">
-        Pirec: {{=image.Priec}}$
+        Price: {{=image.Price}}$
     </h2>
     <ul style="list-style-type:none">
         <li></li>
@@ -26,9 +26,11 @@
         <li>Date: {{=image.Date}}</li>
     </ul>
 </div>
+
+{{if auth.user_id == image.user_id:}}
 <h2>Add more images for the product</h2>
 {{=form}}
-
+{{pass}}
 
 <script>
 $(document).ready(function() {
