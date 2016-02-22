@@ -1,11 +1,14 @@
 {{extend 'layout.html'}}
-<h1>Product image:</h1>
-<div class ="one" style="text-align:center" id="one"></div>
+<h1>Photos:</h1>
+<div class ="one" style="text-align:center" id="a"></div>
 <div class ="well">
+<div class ="two" style="text-align:center" id="b"></div>
 {{for images in itemImages:}}
+
   <img width="60px" height="60px" class="img-thumbnail" src="{{=URL('download', args=images.image)}}" />
 
 {{pass}}
+
 </div>
 
 <div class ="well">
@@ -35,11 +38,13 @@
 <script>
 $(document).ready(function() {
     $('.img-thumbnail').on('click', function() {
-        var img = $('<img />', {src    : this.src,
-                                'class': 'fullImage'
-                  });
-
+        var img = $('<img />', {src: this.src, 'class': 'img-thumbnail'});
         $('DIV.one').html(img).show();
+        $('DIV.two').html(img2).hide();
+    });
+    $('.img-thumbnail').on('mouseover', function() {
+        var img2 = $('<img />', {src: this.src, 'width': '140px', 'height': '100px', 'class': 'img-thumbnail'});
+        $('DIV.two').html(img2).show();
     });
 });
 

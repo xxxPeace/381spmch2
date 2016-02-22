@@ -21,10 +21,10 @@ def index():
 
     if show_all:
         q = db.forSaleList
-        listings = db().select(db.forSaleList.ALL, orderby = db.forSaleList.Title)
+        listings = db().select(db.forSaleList.ALL, orderby =~ db.forSaleList.votes)
     else:
         q=(db.forSaleList.Status == True)
-        listings = db(db.forSaleList.Status == True).select(db.forSaleList.ALL, orderby = db.forSaleList.Title)
+        listings = db(db.forSaleList.Status == True).select(db.forSaleList.ALL, orderby =~ db.forSaleList.votes)
 
     form = SQLFORM.grid(q,
         args=request.args[:1],
@@ -38,14 +38,25 @@ def index():
         create=False,
         searchable=False
         )
-    return locals()
+    return dict(listings=listings, form=form, button=button)
 
 def showList():
-    depts = db().select(db.forSaleList.ALL, orderby=db.forSaleList.Date)
+    depts = db().select(db.forSaleList.ALL, orderby=db.forSaleList.votes)
     return locals()
 
-def imageTables(): 
-   return dict(tables=db().select(db.imageList.ALL))
+@auth.requires_login()
+def voteUp():
+    item = db.forSaleList[request.vars.id]
+    new_votes = item.votes + 1
+    item.update_record(votes=new_votes)
+    return str(new_votes)
+
+@auth.requires_login()
+def voteDown():
+    item = db.forSaleList[request.vars.id]
+    new_votes = item.votes - 1
+    item.update_record(votes=new_votes)
+    return str(new_votes)
 
 @auth.requires_login()
 def addItem():
@@ -132,13 +143,3 @@ def download():
     http://..../[app]/default/download/[filename]
     """
     return response.download(request, db)
-
-
-def call():
-    """
-    exposes services. for example:
-    http://..../[app]/default/call/jsonrpc
-    decorate with @services.jsonrpc the functions to expose
-    supports xml, json, xmlrpc, jsonrpc, amfrpc, rss, csv
-    """
-    return service()

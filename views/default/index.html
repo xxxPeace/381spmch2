@@ -1,17 +1,25 @@
-{{left_sidebar_enabled,right_sidebar_enabled=False,('message' in globals())}}
 {{extend 'layout.html'}}
 
 <h1>Sale Items:</h1>
 <ol type ="1">
+<form><input type="hidden" id="id" name="id" value="" /></form>
 {{for image in listings:}}
     <div class ="well">
-       {{=LI(A( image.Title, _href=URL("show", args=image.id)))}}
-        <img width="60px" height="40px" class="img-thumbnail" src="{{=URL('download', args=image.Image)}}" />
+       {{=LI(A( image.Title , _href=URL("show", args=image.id)))}}
+        <img width="180px" height="160px" class="img-thumbnail" src="{{=URL('download', args=image.Image)}}" />
+        <div style="text-align:right">
+		<font size="8" style="font-family:verdana;font-size:460%;"><span id="image{{=image.id}}">{{=image.votes}}</span></font>
+		<br />
+		<font size="6" style="font-family:courier;">Votes</font>
+		</div>
+
+		<br />
+		<button class="btn btn-success" <span onclick="jQuery('#id').val('{{=image.id}}');
+		       ajax('{{=URL('default', 'voteUp')}}', ['id'], 'image{{=image.id}}');"></span>thumbs-up</button>
+
+		<button class="btn btn-danger" <span onclick="jQuery('#id').val('{{=image.id}}');
+		       ajax('{{=URL('default', 'voteDown')}}', ['id'], 'image{{=image.id}}');"></span>thumbs-down</button>
     </div>
+	
 {{pass}}
 </ol>
-<!---{{=form}}--->
-<p>
-{{=A('New post', _class="btn btn-primary", _href=URL('default', 'addItem'))}}
-{{=button}}
-</p>
