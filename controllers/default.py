@@ -11,10 +11,7 @@
 from gluon.tools import Crud
 crud = Crud(db)
 
-#def index():
-#    images = db().select(db.image.ALL, orderby=db.image.title)
-#    #return dict(images=images)
-#    return locals()
+
 def index():
     show_all = request.args(0) == 'all'
     if show_all:
@@ -73,7 +70,10 @@ def add():
 @auth.requires_login()
 def addImage():
     """Add a post."""
-    form = SQLFORM(db.imageList)
+    saleList = db.forSaleList(request.args(0,cast=int)) or redirect(URL('index'))
+    db.imageList.forSaleList_id.default = saleList.id
+    #form = SQLFORM(db.imageList)
+    form = crud.create(db.imageList)
     if form.process().accepted:
         # Successful processing.
         session.flash = T("inserted")
@@ -85,18 +85,29 @@ def manageItems():
     grid = SQLFORM.grid(db.forSaleList)
     return locals()
 
-#def show():
-#    image = db.image(request.args(0,cast=int)) or redirect(URL('index'))
-#    db.post.image_id.default = image.id
-#    form = SQLFORM(db.post)
-#    if form.process().accepted:
-#        response.flash = 'your comment is posted'
-#    comments = db(db.post.image_id==image.id).select()
-    #return dict(image=image, comments=comments, form=form)
-#    return locals()
 
 def show():
     image = db.forSaleList(request.args(0,cast=int)) or redirect(URL('index'))
+    #forum = db.post(request.args(0,cast=int)) or redirect(URL('generalForum'))
+    #comms  = db(db.comm.post_id==forum.id).select(db.comm.ALL, orderby=db.comm.datetime)
+    db.imageList.forSaleList_id.default = image.id
+    
+    form = SQLFORM(db.imageList,record=None,
+        deletable=False, linkto=None,
+        upload=None, fields=None, labels=None,
+        col3={}, submit_button='Post image',
+        delete_label='Check to delete:',
+        showid=True, readonly=False,
+        comments=True, keepopts=[],
+        ignore_rw=False, record_id=None,
+        formstyle='bootstrap3_stacked',
+        buttons=['submit'], separator=':')
+    #form = crud.create(db.imageList)
+    if form.process().accepted:
+        # Successful processing.
+        session.flash = T("inserted")
+        redirect(URL('default', 'index'))
+    itemImages= db(db.imageList.forSaleList_id==image.id).select(db.imageList.ALL)
     return locals()
 
 

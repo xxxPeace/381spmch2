@@ -95,10 +95,6 @@ auth.settings.reset_password_requires_verification = True
 
 db = DAL("sqlite://storage.sqlite")
 
-
-db.define_table('imageList',
-  Field('Image', 'upload'))
-
 db.define_table('forSaleList',
   Field('Seller',  requires=IS_NOT_EMPTY()),
   Field('Email', requires = IS_EMAIL(error_message='invalid email!')),
@@ -113,5 +109,9 @@ db.define_table('forSaleList',
         error_message='The price should be in the range 0..100000')),
   Field('Status','boolean', default=False),
   Field('Image', 'upload'),
-  Field('image_id', 'reference imageList', readable=False, writable=False),
-  format = '%(title)s')
+  #Field('Image_id', 'reference imageList', readable=False, writable=False),
+  )
+
+db.define_table('imageList',
+  Field('forSaleList_id', 'reference forSaleList', readable=False , writable=False),
+  Field('image', 'upload'))
