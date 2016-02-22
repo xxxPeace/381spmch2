@@ -53,9 +53,16 @@ response.form_label_separator = myconf.take('forms.separator')
 
 from gluon.tools import Auth, Service, PluginManager
 
+db = DAL("sqlite://storage.sqlite")
+
 auth = Auth(db)
 service = Service()
 plugins = PluginManager()
+
+auth.settings.extra_fields['auth_user']= [
+                 
+                 ]
+
 
 ## create all tables needed by auth if not custom tables
 auth.define_tables(username=False, signature=False)
@@ -88,24 +95,21 @@ auth.settings.reset_password_requires_verification = True
 ## >>> for row in rows: print row.id, row.myfield
 #########################################################################
 
-## after defining tables, uncomment below to enable auditing
-# auth.enable_record_versioning(db)
 
-##image blog
 
-db = DAL("sqlite://storage.sqlite")
 
 db.define_table('forSaleList',
+  Field('user_id', 'reference  auth_user', readable=False, writable=False),
   Field('Seller',  requires=IS_NOT_EMPTY()),
   Field('Email', requires = IS_EMAIL(error_message='invalid email!')),
   Field('Phone', requires = IS_MATCH('^1?((-)\d{3}-?|\(\d{3}\))\d{3}-?\d{4}$',
         error_message='not a phone number')),
-  Field('Date','datetime'),
+  Field('Date','datetime', readable=False,writable=False, default=request.now),
   Field('Title', requires=IS_NOT_EMPTY()),
   Field('Description','text'),
   Field('Category', 'string', requires = IS_IN_SET
        (['Car', 'Bike', 'Book', 'Music', 'Outdoors', 'Household', 'Misc'])),
-  Field('Priec', 'double', requires = IS_FLOAT_IN_RANGE(0, 100000.0,
+  Field('Price', 'double', requires = IS_FLOAT_IN_RANGE(0, 100000.0,
         error_message='The price should be in the range 0..100000')),
   Field('Status','boolean', default=False),
   Field('Image', 'upload'),
@@ -113,5 +117,9 @@ db.define_table('forSaleList',
   )
 
 db.define_table('imageList',
+  Field('user_id', 'reference  auth_user', readable=False, writable=False),
   Field('forSaleList_id', 'reference forSaleList', readable=False , writable=False),
   Field('image', 'upload'))
+
+#db['forSaleList'].drop()
+#db.commit()
