@@ -19,7 +19,14 @@
 
 		<button class="btn btn-danger" <span onclick="jQuery('#id').val('{{=image.id}}');
 		       ajax('{{=URL('default', 'voteDown')}}', ['id'], 'image{{=image.id}}');"></span>thumbs-down</button>
+		{{if (auth.user_id == None):}}
+			<br />
+			<font style="font-size:80%; color:red;"><i>Request login to vote</i></font>
+		{{pass}}
     </div>
 	
 {{pass}}
 </ol>
+
+
+<div style="text-align:right"><p>{{=A('New post', _class="btn btn-primary", _href=URL('default', 'addItem'))}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{=button}}</p></div>
