@@ -5,7 +5,7 @@
 ## Customize your APP title, subtitle and menus here
 #########################################################################
 
-response.logo = A(B('HW1'),XML('&nbsp;'),
+response.logo = A(B('HW2'),XML('&nbsp;'),
                   _class="navbar-brand",_href="http://people.ucsc.edu/~rtan9/",
                   _id="web2py-logo")
 response.title = request.application.replace('_',' ').title()
@@ -68,8 +68,7 @@ def _():
               (T('About'), False, URL(
                'admin', 'default', 'about/' + app)),
               ]),
-        (T('Manager Items'),False, URL('manageItems')),
-        (T('add image'),False, URL('addImage'))
+        (T('Manager Items'),False, URL('manageItems'))
         ]
 if DEVELOPMENT_MENU: _()
 

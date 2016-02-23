@@ -21,10 +21,10 @@ def index():
 
     if show_all:
         q = db.forSaleList
-        listings = db().select(db.forSaleList.ALL, orderby = db.forSaleList.Title)
+        listings = db().select(db.forSaleList.ALL, orderby =~ db.forSaleList.votes)
     else:
         q=(db.forSaleList.Status == True)
-        listings = db(db.forSaleList.Status == True).select(db.forSaleList.ALL, orderby = db.forSaleList.Title)
+        listings = db(db.forSaleList.Status == True).select(db.forSaleList.ALL, orderby =~ db.forSaleList.votes)
 
     form = SQLFORM.grid(q,
         args=request.args[:1],
@@ -38,14 +38,25 @@ def index():
         create=False,
         searchable=False
         )
-    return locals()
+    return dict(listings=listings, form=form, button=button)
 
 def showList():
-    depts = db().select(db.forSaleList.ALL, orderby=db.forSaleList.Date)
+    depts = db().select(db.forSaleList.ALL, orderby=db.forSaleList.votes)
     return locals()
 
-def imageTables(): 
-   return dict(tables=db().select(db.imageList.ALL))
+@auth.requires_login()
+def voteUp():
+    item = db.forSaleList[request.vars.id]
+    new_votes = item.votes + 1
+    item.update_record(votes=new_votes)
+    return str(new_votes)
+
+@auth.requires_login()
+def voteDown():
+    item = db.forSaleList[request.vars.id]
+    new_votes = item.votes - 1
+    item.update_record(votes=new_votes)
+    return str(new_votes)
 
 @auth.requires_login()
 def addItem():
@@ -53,45 +64,39 @@ def addItem():
     crud.settings.keepvalues = True
     crud.settings.label_separator = ' :'
     crud.settings.formstyle = 'ul'
+    db.forSaleList.user_id.default = auth.user.id
     form = crud.create(db.forSaleList)
+    if form.process().accepted:
+        # Successful processing.
+        session.flash = T("accepted")
+        redirect(URL('default', 'index'))
     return locals()
 
 @auth.requires_login()
 def add():
     """Add a post."""
+    db.forSaleList.user_id.default = auth.user.id
     SQLFORM.messages.submit_button = 'Place on market'
     form = SQLFORM(db.forSaleList)
     if form.process().accepted:
         # Successful processing.
-        session.flash = T("inserted")
+        session.flash = T("accepted")
         redirect(URL('default', 'index'))
     return locals()
 
-@auth.requires_login()
-def addImage():
-    """Add a post."""
-    saleList = db.forSaleList(request.args(0,cast=int)) or redirect(URL('index'))
-    db.imageList.forSaleList_id.default = saleList.id
-    #form = SQLFORM(db.imageList)
-    form = crud.create(db.imageList)
-    if form.process().accepted:
-        # Successful processing.
-        session.flash = T("inserted")
-        redirect(URL('default', 'index'))
-    return locals()
 
 @auth.requires_login()
 def manageItems():
     grid = SQLFORM.grid(db.forSaleList)
     return locals()
 
-
+@auth.requires_login()
 def show():
     image = db.forSaleList(request.args(0,cast=int)) or redirect(URL('index'))
     #forum = db.post(request.args(0,cast=int)) or redirect(URL('generalForum'))
     #comms  = db(db.comm.post_id==forum.id).select(db.comm.ALL, orderby=db.comm.datetime)
     db.imageList.forSaleList_id.default = image.id
-    
+    db.imageList.user_id.default = auth.user.id
     form = SQLFORM(db.imageList,record=None,
         deletable=False, linkto=None,
         upload=None, fields=None, labels=None,
@@ -105,8 +110,8 @@ def show():
     #form = crud.create(db.imageList)
     if form.process().accepted:
         # Successful processing.
-        session.flash = T("inserted")
-        redirect(URL('default', 'index'))
+        session.flash = T("Image added")
+        #redirect(URL('default', 'index'))
     itemImages= db(db.imageList.forSaleList_id==image.id).select(db.imageList.ALL)
     return locals()
 
@@ -138,13 +143,3 @@ def download():
     http://..../[app]/default/download/[filename]
     """
     return response.download(request, db)
-
-
-def call():
-    """
-    exposes services. for example:
-    http://..../[app]/default/call/jsonrpc
-    decorate with @services.jsonrpc the functions to expose
-    supports xml, json, xmlrpc, jsonrpc, amfrpc, rss, csv
-    """
-    return service()
