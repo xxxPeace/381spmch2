@@ -6,7 +6,7 @@
 {{for image in listings:}}
     <div class ="well">
        {{=LI(A( image.Title, _href=URL("show", args=image.id)))}}
-        <img width="60px" height="40"src="{{=URL('download', args=image.Image)}}" />
+        <img width="60px" height="40px"src="{{=URL('download', args=image.Image)}}" />
     </div>
 {{pass}}
 </ol>

@@ -1,9 +1,13 @@
 {{extend 'layout.html'}}
 <h1>Product image:</h1>
-<div style="text-align:center">
-    <img
-     src="{{=URL('download', args=image.Image)}}" />
-</div>
+<div class ="one" style="text-align:center" id="one"></div>
+{{for images in itemImages:}}
+  <img width="60px" height="60px" class="img-thumbnail" src="{{=URL('download', args=images.image)}}" />
+
+{{pass}}
+
+
+
 <div class ="well">
     <h2>{{=image.Title}}</h2>
     <h2 style="color:red">
@@ -22,3 +26,19 @@
         <li>Date: {{=image.Date}}</li>
     </ul>
 </div>
+<h2>Add more images for the product</h2>
+{{=form}}
+
+
+<script>
+$(document).ready(function() {
+    $('.img-thumbnail').on('click', function() {
+        var img = $('<img />', {src    : this.src,
+                                'class': 'fullImage'
+                  });
+
+        $('DIV.one').html(img).show();
+    });
+});
+
+</script>
