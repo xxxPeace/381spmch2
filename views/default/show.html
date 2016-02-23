@@ -30,6 +30,8 @@
     </ul>
 </div>
 
+{{=A('< back', _class="btn btn-sm btn-primary", _href=URL('default', 'index'))}}
+
 {{if auth.user_id == image.user_id:}}
 <h2>Add more images for the product</h2>
 {{=form}}
@@ -47,5 +49,4 @@ $(document).ready(function() {
         $('DIV.two').html(img2).show();
     });
 });
-
 </script>
