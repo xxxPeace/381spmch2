@@ -2,10 +2,10 @@
 <h1>Photos:</h1>
 <div class ="one" style="text-align:center" id="a"></div>
 <div class ="well">
-<div class ="two" style="text-align:center" id="b"></div>
+
 {{for images in itemImages:}}
 
-  <img width="60px" height="60px" class="img-thumbnail" src="{{=URL('download', args=images.image)}}" />
+  <img style= "width:90px; height:70px;" onmouseover="bigImg(this)" onmouseout="normalImg(this)"  class="img-thumbnail" src="{{=URL('download', args=images.image)}}" />
 
 {{pass}}
 
@@ -44,9 +44,15 @@ $(document).ready(function() {
         $('DIV.one').html(img).show();
         $('DIV.two').html(img2).hide();
     });
-    $('.img-thumbnail').on('mouseover', function() {
-        var img2 = $('<img />', {src: this.src, 'width': '140px', 'height': '100px', 'class': 'img-thumbnail'});
-        $('DIV.two').html(img2).show();
-    });
+    
 });
+function bigImg(x) {
+    x.style.height = "90px";
+    x.style.width = "110px";
+}
+
+function normalImg(x) {
+    x.style.height = "70px";
+    x.style.width = "90px";
+}
 </script>
