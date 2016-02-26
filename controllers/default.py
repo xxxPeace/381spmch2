@@ -50,6 +50,7 @@ def voteUp():
     if item.user_id != auth.user.id:
         new_votes = item.votes + 1     
     else:
+        session.flash = 'you can not vote yourself'
         new_votes = item.votes + 0
     item.update_record(votes=new_votes)
     return str(new_votes)
@@ -60,6 +61,7 @@ def voteDown():
     if itemDown.user_id != auth.user.id:
         new_votesDown = itemDown.votesDown + 1
     else:
+        session.flash = 'you can not vote yourself'
         new_votesDown = itemDown.votesDown + 0
     itemDown.update_record(votesDown=new_votesDown)
     return str(new_votesDown)
