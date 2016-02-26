@@ -113,6 +113,7 @@ db.define_table('forSaleList',
         error_message='The price should be in the range 0..100000')),
   Field('Status','boolean', default=False),
   Field('votes', 'integer', readable=False, writable=False, default=0),
+  Field('votesDown', 'integer', readable=False, writable=False, default=0),
   Field('Image', 'upload'),
   #Field('Image_id', 'reference imageList', readable=False, writable=False),
   )

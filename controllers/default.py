@@ -56,13 +56,13 @@ def voteUp():
 
 @auth.requires_login()
 def voteDown():
-    item = db.forSaleList[request.vars.id]
-    if item.user_id != auth.user.id:
-        new_votes = item.votes - 1
+    itemDown = db.forSaleList[request.vars.id]
+    if itemDown.user_id != auth.user.id:
+        new_votesDown = itemDown.votesDown + 1
     else:
-        new_votes = item.votes + 0
-    item.update_record(votes=new_votes)
-    return str(new_votes)
+        new_votesDown = itemDown.votesDown + 0
+    itemDown.update_record(votesDown=new_votesDown)
+    return str(new_votesDown)
 
 @auth.requires_login()
 def addItem():
