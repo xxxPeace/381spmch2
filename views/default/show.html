@@ -1,6 +1,8 @@
 {{extend 'layout.html'}}
 <h1>Photos:</h1>
-<div class ="one" style="text-align:center" id="a"></div>
+{{if len(itemImages): }}
+<div class ="one" style="text-align:center" id="a"><img class="img-thumbnail" src="{{=URL('download', args=itemImages[0].image)}}" /></div>
+{{pass}}
 <div class ="well">
 
 {{for images in itemImages:}}
@@ -10,7 +12,8 @@
 {{pass}}
 
 </div>
-
+{{seller=db.auth_user(image.user_id)}}
+<form><input type="hidden" id="id" name="id" value="" /></form>
 <div class ="well">
     <h2>{{=image.Title}}</h2>
     <h2 style="color:red">
@@ -18,7 +21,7 @@
     </h2>
     <ul style="list-style-type:none">
         <li></li>
-        <li>Seller: {{=image.Seller}}</li>
+        <li>Seller: {{=seller.first_name+' '+seller.last_name}}</li>
         <li>Phone: {{=image.Phone}}</li>
         <li>Email: {{=image.Email}}</li>
         <li>Category: {{=image.Category}}</li>
@@ -28,9 +31,28 @@
         <li>Available for sale: {{=image.Status}}</li>
         <li>Date: {{=image.Date}}</li>
     </ul>
+    <br>
+    <br>
+    <div style="text-align:right">
+        <font size="8" style="font-family:verdana;font-size:460%;color:#00ace6"><span id="voteUp{{=seller.id}}">{{=seller.votesUp}}</span></font>
+        <font size="2" style="font-family:Comic Sans MS;color:#00ace6">like</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+        <font size="8" style="font-family:verdana;font-size:460%;color:#990000"><span id="voteDown{{=seller.id}}">{{=seller.votesDown}}</span></font>
+        <font size="2" style="font-family:Comic Sans MS;color:#990000">dislike</font>
+    </div>
 </div>
 
 {{=A('< back', _class="btn btn-sm btn-primary", _href=URL('default', 'index'))}}
+
+<div style="text-align:right">
+
+<button class="btn btn-success" <span onclick="jQuery('#id').val('{{=seller.id}}');
+ajax('{{=URL('default', 'voteUp')}}', ['id'], 'voteUp{{=seller.id}}');"></span>thumbs-up</button>
+
+<button class="btn btn-danger" <span onclick="jQuery('#id').val('{{=seller.id}}');
+ajax('{{=URL('default', 'voteDown')}}', ['id'], 'voteDown{{=seller.id}}');"></span>thumbs-down</button>
+
+</div>
 
 {{if auth.user_id == image.user_id:}}
 <h2>Add more images for the product</h2>

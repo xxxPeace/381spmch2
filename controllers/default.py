@@ -26,10 +26,11 @@ def index():
         q=(db.forSaleList.Status == True)
         listings = db(db.forSaleList.Status == True).select(db.forSaleList.ALL, orderby =~ db.forSaleList.votes)
 
+    ##votes =  db(db.forSaleList.user_id == db.vote.posted_by).select(db.forSaleList.ALL)
+
     form = SQLFORM.grid(q,
         args=request.args[:1],
         fields=[db.forSaleList.Title,
-                    db.forSaleList.Seller,
                     db.forSaleList.Description,
                ],
         editable=False, deletable=False,
@@ -46,19 +47,26 @@ def showList():
 
 @auth.requires_login()
 def voteUp():
-    item = db.forSaleList[request.vars.id]
-    if item.user_id != auth.user.id:
-        new_votes = item.votes + 1     
+    item = db.auth_user(request.vars.id)
+    if item.votesUp is None:
+       item.update_record(votesUp=0)
+    new_votes = item.votesUp + 1
+    if item.id != auth.user.id:
+        new_votes = item.votesUp + 1
     else:
         session.flash = 'you can not vote yourself'
-        new_votes = item.votes + 0
-    item.update_record(votes=new_votes)
+        new_votes = item.votesUp + 0
+  
+    item.update_record(votesUp=new_votes)
     return str(new_votes)
 
 @auth.requires_login()
 def voteDown():
-    itemDown = db.forSaleList[request.vars.id]
-    if itemDown.user_id != auth.user.id:
+    itemDown = db.auth_user(request.vars.id)
+    if itemDown.votesDown is None:
+       itemDown.update_record(votesDown= 0)
+
+    if itemDown.id != auth.user.id:
         new_votesDown = itemDown.votesDown + 1
     else:
         session.flash = 'you can not vote yourself'
