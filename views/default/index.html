@@ -4,26 +4,24 @@
 <ol type ="1">
 <form><input type="hidden" id="id" name="id" value="" /></form>
 {{for image in listings:}}
+	
+	{{seller=db.auth_user(image.user_id)}}
     <div class ="well">
        {{=LI(A( image.Title , _href=URL("show", args=image.id)))}}
         <img width="180px" height="160px" class="img-thumbnail" src="{{=URL('download', args=image.Image)}}" />
         <div style="text-align:right">
-		<font size="8" style="font-family:verdana;font-size:460%;color:#00ace6"><span id="voteUp{{=image.id}}">{{=image.votes}}</span></font>
+		<font size="8" style="font-family:verdana;font-size:460%;color:#00ace6"><span id="voteUp{{=seller.id}}">{{=seller.votesUp}}</span></font>
 		<font size="2" style="font-family:Comic Sans MS;color:#00ace6">like</font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-		<font size="8" style="font-family:verdana;font-size:460%;color:#990000"><span id="voteDown{{=image.id}}">{{=image.votesDown}}</span></font>
+		<font size="8" style="font-family:verdana;font-size:460%;color:#990000"><span id="voteDown{{=seller.id}}">{{=seller.votesDown}}</span></font>
 		<font size="2" style="font-family:Comic Sans MS;color:#990000">dislike</font>
 		<br />
 		<br><br><br><br>
-		<font size="3" style="font-family:courier;color:#e67300;">Seller:    {{=image.Seller}}</font>
+		<font size="3" style="font-family:courier;color:#e67300;">Rating of the seller:    {{=seller.first_name+' '+seller.last_name}}</font>
 		</div>
 
 		<br />
-		<button class="btn btn-success" <span onclick="jQuery('#id').val('{{=image.id}}');
-		       ajax('{{=URL('default', 'voteUp')}}', ['id'], 'voteUp{{=image.id}}');"></span>thumbs-up</button>
 
-		<button class="btn btn-danger" <span onclick="jQuery('#id').val('{{=image.id}}');
-		       ajax('{{=URL('default', 'voteDown')}}', ['id'], 'voteDown{{=image.id}}');"></span>thumbs-down</button>
 		{{if (auth.user_id == None):}}
 			<br />
 			<font style="font-size:80%; color:red;"><i>Request login to vote</i></font>

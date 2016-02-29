@@ -60,7 +60,8 @@ service = Service()
 plugins = PluginManager()
 
 auth.settings.extra_fields['auth_user']= [
-                 
+                  Field('votesUp', 'integer', readable=False ,writable=False, default=0),
+                  Field('votesDown', 'integer', readable=False, writable=False, default=0)                
                  ]
 
 
@@ -96,8 +97,6 @@ auth.settings.reset_password_requires_verification = True
 #########################################################################
 
 
-
-
 db.define_table('forSaleList',
   Field('user_id', 'reference  auth_user', readable=False, writable=False),
   Field('Seller',  requires=IS_NOT_EMPTY()),
@@ -118,10 +117,20 @@ db.define_table('forSaleList',
   #Field('Image_id', 'reference imageList', readable=False, writable=False),
   )
 
+db.define_table('vote',
+  Field('forsale_Id','reference forSaleList'),
+  Field('votesUp','integer', readable=False, writable=False, default=0),
+  Field('votesDown', 'integer', readable=False, writable=False, default=0),
+  Field('posted_on','datetime',readable=False,writable=False),
+  Field('posted_by','reference auth_user',readable=False,writable=False))
+
 db.define_table('imageList',
   Field('user_id', 'reference  auth_user', readable=False, writable=False),
   Field('forSaleList_id', 'reference forSaleList', readable=False , writable=False),
   Field('image', 'upload'))
+
+db.forSaleList.user_id.default = auth.user_id
+db.vote.posted_by.default = auth.user_id
 
 #db['forSaleList'].drop()
 #db.commit()
