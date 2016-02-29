@@ -1,6 +1,8 @@
 {{extend 'layout.html'}}
 <h1>Photos:</h1>
-<div class ="one" style="text-align:center" id="a"></div>
+{{if len(itemImages): }}
+<div class ="one" style="text-align:center" id="a"><img class="img-thumbnail" src="{{=URL('download', args=itemImages[0].image)}}" /></div>
+{{pass}}
 <div class ="well">
 
 {{for images in itemImages:}}
