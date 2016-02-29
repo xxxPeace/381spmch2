@@ -31,7 +31,6 @@ def index():
     form = SQLFORM.grid(q,
         args=request.args[:1],
         fields=[db.forSaleList.Title,
-                    db.forSaleList.Seller,
                     db.forSaleList.Description,
                ],
         editable=False, deletable=False,

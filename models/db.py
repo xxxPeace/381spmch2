@@ -99,7 +99,6 @@ auth.settings.reset_password_requires_verification = True
 
 db.define_table('forSaleList',
   Field('user_id', 'reference  auth_user', readable=False, writable=False),
-  Field('Seller',  requires=IS_NOT_EMPTY()),
   Field('Email', requires = IS_EMAIL(error_message='invalid email!')),
   Field('Phone', requires = IS_MATCH('^1?((-)\d{3}-?|\(\d{3}\))\d{3}-?\d{4}$',
         error_message='not a phone number')),
